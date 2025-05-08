@@ -9,8 +9,8 @@ app = Flask(__name__)
 
 TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
 GROUP_CHAT_IDS = [
-    -4773983672,
-    -4628960734,
+    -4725082852,
+    -4734495739,
     # ... до 250
 ]
 

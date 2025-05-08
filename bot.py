@@ -13,6 +13,8 @@ GROUP_CHAT_IDS = [
     -4734495739,
     # ... до 250
 ]
+DELAY_BETWEEN_MESSAGES = 0.4  # 400 мс между отправками, чтобы быть в пределах лимитов
+
 
 def start(update, context):
     update.message.reply_text("Бот работает и готов пересылать сообщения!")

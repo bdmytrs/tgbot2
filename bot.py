@@ -1,4 +1,3 @@
-
 import os
 import time
 import threading
@@ -8,19 +7,31 @@ from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 app = Flask(__name__)
 
 TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
+
+# 👇 Добавь сюда разрешённых пользователей (user.id)
+ALLOWED_USER_IDS = [
+    1019185179,  # Заменить на реальные ID
+]
+
 GROUP_CHAT_IDS = [
     -4725082852,
     -4734495739,
     # ... до 250
 ]
-DELAY_BETWEEN_MESSAGES = 0.4  # 400 мс между отправками, чтобы быть в пределах лимитов
 
+DELAY_BETWEEN_MESSAGES = 0.4  # 400 мс между отправками
 
 def start(update, context):
-    update.message.reply_text("Бот работает и готов пересылать сообщения!")
+    update.message.reply_text("Бот работает и готов пересылать сообщения от разрешённых пользователей!")
 
 def forward_all(update, context):
     message = update.message
+    user = message.from_user
+
+    # ❗ Проверка ID пользователя
+    if user.id not in ALLOWED_USER_IDS:
+        print(f"Сообщение от неразрешённого пользователя: {user.id} ({user.username}) — не пересылается")
+        return
 
     for group_id in GROUP_CHAT_IDS:
         try:
@@ -39,7 +50,7 @@ def forward_all(update, context):
             elif message.sticker:
                 context.bot.send_sticker(chat_id=group_id, sticker=message.sticker.file_id)
 
-            time.sleep(0.25)
+            time.sleep(DELAY_BETWEEN_MESSAGES)
 
         except Exception as e:
             print(f"Ошибка при пересылке в {group_id}: {e}")
